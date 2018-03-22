@@ -14,7 +14,7 @@ var Leaf = function() {
             refractionRatio: 0.25
         } )
     );
-    //leaf.geometry.vertices[4].y -=1;
+
     leaf.rotateX(Math.random()*Math.PI*2);
     leaf.rotateZ(Math.random()*Math.PI*2);
     leaf.rotateY(Math.random()*Math.PI*2);
@@ -32,7 +32,7 @@ var ChristmasTree = function() {
     THREE.Group.apply(this, arguments);
 
 
-    // A material for the pot
+  
     var potMaterial = new THREE.MeshStandardMaterial( {
         color: 0xf97514,
         shading: THREE.FlatShading,
@@ -59,7 +59,7 @@ var ChristmasTree = function() {
     potRim.receiveShadow = true;
     this.add(potRim);
 
-    // A tree trunk
+    // 树干
     var trunk = new THREE.Mesh(
         addNoise(new THREE.CylinderGeometry(12, 18, 30, 8, 3),2),
         new THREE.MeshStandardMaterial( {
@@ -75,7 +75,7 @@ var ChristmasTree = function() {
     trunk.receiveShadow = true;
     this.add(trunk);
 
-    // A shape, 
+    //一个形状
     var logo = new THREE.Shape();
     logo.moveTo(3.43, 96.86);
     logo.bezierCurveTo(2.01, 96.86, 1.38, 95.87, 2.04, 94.63);
@@ -217,7 +217,7 @@ Star.prototype.updatePosition = function() {
 
 var Decoration = function() {
 
-    // Run the Group constructor with the given arguments
+    
     THREE.Group.apply(this, arguments);
 
     this.rotationSpeed = Math.random() * 0.01 + 0.003;
@@ -318,7 +318,7 @@ var Present = function() {
 
     THREE.Group.apply(this, arguments);
 
-     // A random color assignment
+     // 随机分配颜色
     var colors = ['#ff0051', '#a53c6c','#f19fa0','#72bdbf','#47689b'],
         boxColor = colors.splice( Math.floor(Math.random()*colors.length), 1 )[0];
         colors.push('#393839'),
@@ -392,44 +392,36 @@ var Present = function() {
 Present.prototype = Object.create(THREE.Group.prototype);
 Present.prototype.constructor = Present;
 
-// Create a scene which will hold all our meshes to be rendered
+//创建一个场景控制所有的网格渲染
 var scene = new THREE.Scene();
 
 // Create and position a camera
 var camera = new THREE.PerspectiveCamera(
-    70,                                   // Field of view
-    window.innerWidth/window.innerHeight, // Aspect ratio
-    0.1,                                  // Near clipping pane
-    1000                                  // Far clipping pane
+    70,                                   
+    window.innerWidth/window.innerHeight, 
+    0.1,                                  
+    1000                                  
 );
 
-// Reposition the camera
+// 重新定位相机
 camera.position.set(-60,80,210);
 
-// Point the camera at a given coordinate
 camera.lookAt(new THREE.Vector3(0,80,0))
 
-// Create a renderer
 var renderer = new THREE.WebGLRenderer({ antialias: true });
 
-// Size should be the same as the window
 renderer.setSize( window.innerWidth, window.innerHeight );
 
-// Set a near white clear color (default is black)
 renderer.setClearColor( 0xfff6e6 );
 
-// Enable shadow mapping
 renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
-// Append to the document
 document.body.appendChild( renderer.domElement );
 
-// Add an ambient lights
 var ambientLight = new THREE.AmbientLight( 0xffffff, 0.3 );
 scene.add( ambientLight );
 
-// Add a point light that will cast shadows
 var pointLight = new THREE.PointLight( 0xffffff,.8 );
 pointLight.position.set( 80, 160, 120 );
 pointLight.castShadow = true;
@@ -437,7 +429,6 @@ pointLight.shadow.mapSize.width = 1024;
 pointLight.shadow.mapSize.height = 1024;
 scene.add( pointLight );
 
-// A basic material that shows the geometry wireframe.
 var shadowMaterial = new THREE.ShadowMaterial( { color: 0xffffff } );
 shadowMaterial.opacity = 0.5;
 var groundMesh = new THREE.Mesh(
@@ -447,16 +438,13 @@ var groundMesh = new THREE.Mesh(
 groundMesh.receiveShadow = true;
 scene.add( groundMesh );
 
-// Add the tree
 var tree = new ChristmasTree();
 scene.add(tree);
 
-// A star on top
 var star = new Star();
 star.position.y += 200;
 scene.add(star);
 
-// Loop around the tree, adding presents every 20 to 40 degrees.
 for(var angle = 0; angle < 360; angle += Math.random()*20+20) {
     var p = new Present();
     var radius = Math.random() * 40 + 50;
@@ -467,8 +455,6 @@ for(var angle = 0; angle < 360; angle += Math.random()*20+20) {
 }
 
 
-// Add an orbit control which allows us to move around the scene. See the three.js example for more details
-// https://github.com/mrdoob/three.js/blob/dev/examples/js/controls/OrbitControls.
 var controls = new THREE.OrbitControls( camera, renderer.domElement );
 controls.target = new THREE.Vector3(0,80,0);
 controls.maxPolarAngle = Math.PI / 2;
@@ -480,26 +466,15 @@ requestAnimationFrame(render);
 function render() {
     controls.update();
 
-    // Update animated elements
     tree.updatePosition();
     star.updatePosition();
 
-    // Render the scene/camera combnation
     renderer.render(scene, camera);
 
-    // Repeat...
     requestAnimationFrame(render);
 }
 
-/**
- * Helper function to add random noise to geometry vertixes
- *
- * @param geometry The geometry to alter
- * @param noiseX Amount of noise on the X axis
- * @param noiseY Amount of noise on the Y axis
- * @param noiseZ Amount of noise on the Z axis
- * @returns the geometry object
- */
+
 function addNoise(geometry, noiseX, noiseY, noiseZ) {
 
 	var noiseX = noiseX || 2;
